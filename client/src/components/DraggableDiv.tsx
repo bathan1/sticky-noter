@@ -3,16 +3,21 @@ import React, { useState } from 'react';
 const DraggableDiv: React.FC = () => {
     const [isDragging, setIsDragging] = useState(false);
     const [position, setPosition] = useState({ x: 0, y: 0 });
+    const [initialPosition, setInitialPosition] = useState({ x: 0, y: 0 });
 
     const handleMouseDown = (event: React.MouseEvent) => {
         setIsDragging(true);
+        setInitialPosition({
+            x: event.clientX - position.x,
+            y: event.clientY - position.y
+        });
     };
 
     const handleMouseMove = (event: React.MouseEvent) => {
         if (isDragging) {
             setPosition({
-                x: event.clientX,
-                y: event.clientY
+                x: event.clientX - initialPosition.x,
+                y: event.clientY - initialPosition.y
             });
         }
     };
