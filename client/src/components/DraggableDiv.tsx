@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 
-const DraggableDiv: React.FC = () => {
+interface DraggableDivProps {
+    content: string;
+};
+
+const DraggableDiv: React.FC<DraggableDivProps> = (props) => {
     const [isDragging, setIsDragging] = useState(false);
     const [position, setPosition] = useState({ x: 0, y: 0 });
     const [initialPosition, setInitialPosition] = useState({ x: 0, y: 0 });
@@ -27,15 +31,20 @@ const DraggableDiv: React.FC = () => {
     };
 
     return(
-        <div style={{
+        <div 
+            style={{
             width: '100px',
             height: '100px',
-            background: 'lightblue',
+            background: 'lightyellow',
+            border: '2px solid black',
             position: 'absolute',
             top: position.y + 'px',
             left: position.x + 'px',
             cursor: isDragging ? 'grabbing' : 'grab',
-          }} onMouseDown={handleMouseDown} onMouseMove={handleMouseMove} onMouseUp={handleMouseUp}>Drag me</div>
+          }} 
+            onMouseDown={handleMouseDown} onMouseMove={handleMouseMove} onMouseUp={handleMouseUp}>
+            {props.content}
+        </div>
     )
 }
 
