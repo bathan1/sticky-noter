@@ -83,8 +83,8 @@ const DraggableDiv: React.FC<DraggableDivProps> = (props) => {
             className="context-menu"
             style={{ position: 'absolute', top: position.y + 'px', left: position.x + 'px', display: contextMenuVisible ? 'block' : 'none' }}
         >
-            <button onClick={handleEditClick}>E</button>
-            <button onClick={handleDeleteClick}>X</button>
+            {!isEditing && (<button id="editButton" onClick={handleEditClick}>E</button>)}
+            {!isEditing && (<button id="deleteButton" onClick={handleDeleteClick}>X</button>)}
             {isEditing && (
                 <div> 
                     <input
@@ -102,6 +102,7 @@ const DraggableDiv: React.FC<DraggableDivProps> = (props) => {
         const handleKeyUp = (event: KeyboardEvent) => {
             if (event.key === "Escape") {
                 setContextMenuVisible(false);
+                setIsEditing(false);
             }
         };
 
