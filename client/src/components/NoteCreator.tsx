@@ -10,6 +10,7 @@ const NoteCreator: React.FC<NoteCreatorProps> = (props) => {
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
     props.handleAddNote(event, inputValue);
+    setInputValue("");
   }
   
   return(
