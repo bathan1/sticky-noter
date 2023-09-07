@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 interface NoteCreatorProps {
-  handleAddNote: (event: React.FormEvent, content: string) => void;
+  handleAddNote: (event: React.FormEvent, content: string) => void,
 }
 
 const NoteCreator: React.FC<NoteCreatorProps> = (props) => {

@@ -1,7 +1,15 @@
 import React, { useState } from 'react';
 
+interface Note {
+    id: string,
+    content: string,
+};
+
 interface DraggableDivProps {
-    content: string;
+    content: string,
+    notes: Note[],
+    setNotes: React.Dispatch<React.SetStateAction<Note[]>>,
+    id: string,
 };
 
 const DraggableDiv: React.FC<DraggableDivProps> = (props) => {
@@ -38,8 +46,17 @@ const DraggableDiv: React.FC<DraggableDivProps> = (props) => {
     };
 
     const handleDeleteClick = () => {
+        const currentNotes = props.notes;
+        const indexToDelete = currentNotes.findIndex((note) => note.id === props.id);
+    
+        if (indexToDelete === -1) {
+            return;
+        }
 
+        const newNotes = [...currentNotes.slice(0, indexToDelete), ...currentNotes.slice(indexToDelete + 1)]
+        props.setNotes(newNotes);
 
+        setIsDragging(false);
         setContextMenuVisible(false);
     };
 

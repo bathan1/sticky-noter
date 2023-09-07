@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import DraggableDiv from "./components/DraggableDiv";
 import NoteCreator from "./components/NoteCreator";
+import { v4 as uuidv4 } from "uuid";
 import './App.css';
 
 interface Note {
-  id: number;
+  id: string;
   content: string;
 };
 
@@ -13,18 +14,20 @@ function App() {
 
   const handleAddNote = (event: React.FormEvent, content: string) => {
     event.preventDefault();
+    const uniqueId = uuidv4();
     const newNote = {
-      id: Math.random(),
+      id: uniqueId,
       content: content
     };
-    setNotes([...notes, newNote]);
+
+    setNotes(prevNotes => [...prevNotes, newNote]);
   };
 
   return (
     <div className="App">
       <NoteCreator handleAddNote={handleAddNote} />
       {notes.map((note) => (
-        <DraggableDiv key={note.id} content={note.content} />
+        <DraggableDiv key={note.id} content={note.content} notes={notes} setNotes={setNotes} id={note.id}/>
       ))}
     </div>
   );
