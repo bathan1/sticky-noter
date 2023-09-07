@@ -22,7 +22,7 @@ router.post("/login", async (req, res) => {
       return res.status(401).json({ message: "Invalid password" });
     }
 
-    return res.status(201).json({ message: "Logged in successfully", user: existingUser });
+    return res.status(201).json({ message: "Logged in successfully", currentUser: existingUser });
   } catch (error) {
     console.error(error);
   }
