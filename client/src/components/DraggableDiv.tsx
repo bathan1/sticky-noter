@@ -81,6 +81,7 @@ const DraggableDiv: React.FC<DraggableDivProps> = (props) => {
                 top: position.y + 'px',
                 left: position.x + 'px',
                 cursor: isDragging ? 'grabbing' : 'grab',
+                userSelect: isDragging ? "none" : "auto"
             }} 
                 onMouseDown={handleMouseDown} 
                 onMouseMove={handleMouseMove} 
