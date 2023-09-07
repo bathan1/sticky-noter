@@ -8,6 +8,7 @@ const DraggableDiv: React.FC<DraggableDivProps> = (props) => {
     const [isDragging, setIsDragging] = useState(false);
     const [position, setPosition] = useState({ x: 0, y: 0 });
     const [initialPosition, setInitialPosition] = useState({ x: 0, y: 0 });
+    const [contextMenuVisible, setContextMenuVisible] = useState(false);
 
     const handleMouseDown = (event: React.MouseEvent) => {
         setIsDragging(true);
@@ -30,20 +31,48 @@ const DraggableDiv: React.FC<DraggableDivProps> = (props) => {
         setIsDragging(false);
     };
 
+    const handleContextMenu = (event: React.MouseEvent) => {
+        event.preventDefault();
+        setContextMenuVisible(true);
+        setPosition({ x: position.x, y: position.y });
+    };
+
+    const handleDeleteClick = () => {
+
+
+        setContextMenuVisible(false);
+    };
+
+    const contextMenu = (
+        <div
+            className="context-menu"
+            style={{ position: 'absolute', top: position.y + 'px', left: position.x + 'px', display: contextMenuVisible ? 'block' : 'none' }}
+        >
+            <button onClick={handleDeleteClick}>X</button>
+        </div>
+    )
+
     return(
-        <div 
-            style={{
-            width: '100px',
-            height: '100px',
-            background: 'lightyellow',
-            border: '2px solid black',
-            position: 'absolute',
-            top: position.y + 'px',
-            left: position.x + 'px',
-            cursor: isDragging ? 'grabbing' : 'grab',
-          }} 
-            onMouseDown={handleMouseDown} onMouseMove={handleMouseMove} onMouseUp={handleMouseUp}>
-            {props.content}
+        <div>
+            <div 
+                style={{
+                width: '100px',
+                height: '100px',
+                background: 'lightyellow',
+                border: '2px solid black',
+                position: 'absolute',
+                top: position.y + 'px',
+                left: position.x + 'px',
+                cursor: isDragging ? 'grabbing' : 'grab',
+            }} 
+                onMouseDown={handleMouseDown} 
+                onMouseMove={handleMouseMove} 
+                onMouseUp={handleMouseUp}
+                onContextMenu={handleContextMenu}
+            >
+                {props.content}
+            </div>
+            {contextMenu}
         </div>
     )
 }
