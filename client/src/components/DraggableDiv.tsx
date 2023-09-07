@@ -7,6 +7,7 @@ interface Note {
 
 interface DraggableDivProps {
     content: string,
+    note: Note,
     notes: Note[],
     setNotes: React.Dispatch<React.SetStateAction<Note[]>>,
     id: string,
@@ -17,6 +18,8 @@ const DraggableDiv: React.FC<DraggableDivProps> = (props) => {
     const [position, setPosition] = useState({ x: 0, y: 0 });
     const [initialPosition, setInitialPosition] = useState({ x: 0, y: 0 });
     const [contextMenuVisible, setContextMenuVisible] = useState(false);
+    const [isEditing, setIsEditing] = useState(false);
+    const [editableContent, setEditableContent] = useState(props.content);
 
     const handleMouseDown = (event: React.MouseEvent) => {
         setIsDragging(true);
@@ -60,14 +63,40 @@ const DraggableDiv: React.FC<DraggableDivProps> = (props) => {
         setContextMenuVisible(false);
     };
 
+    const handleEditClick = () => {
+        setIsEditing(true);
+        setEditableContent(props.content);
+    }
+
+    const handleSaveClick = () => {
+        const updatedNotes = props.notes.map(note => 
+          note.id === props.id ? { ...note, content: editableContent } : note
+        );
+      
+        props.setNotes(updatedNotes);
+        setIsEditing(false);
+        setContextMenuVisible(false);
+      }
+
     const contextMenu = (
         <div
             className="context-menu"
             style={{ position: 'absolute', top: position.y + 'px', left: position.x + 'px', display: contextMenuVisible ? 'block' : 'none' }}
         >
+            <button onClick={handleEditClick}>E</button>
             <button onClick={handleDeleteClick}>X</button>
+            {isEditing && (
+                <div> 
+                    <input
+                        type="text"
+                        value={editableContent}
+                        onChange={(event) => setEditableContent(event.target.value)}
+                    />
+                    <button onClick={handleSaveClick}>Save</button>
+                </div>
+            )}
         </div>
-    )
+    );
 
     return(
         <div>
@@ -88,7 +117,7 @@ const DraggableDiv: React.FC<DraggableDivProps> = (props) => {
                 onMouseUp={handleMouseUp}
                 onContextMenu={handleContextMenu}
             >
-                {props.content}
+            {props.content}
             </div>
             {contextMenu}
         </div>

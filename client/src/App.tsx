@@ -27,7 +27,7 @@ function App() {
     <div className="App">
       <NoteCreator handleAddNote={handleAddNote} />
       {notes.map((note) => (
-        <DraggableDiv key={note.id} content={note.content} notes={notes} setNotes={setNotes} id={note.id}/>
+        <DraggableDiv key={note.id} note={note} content={note.content} notes={notes} setNotes={setNotes} id={note.id}/>
       ))}
     </div>
   );
