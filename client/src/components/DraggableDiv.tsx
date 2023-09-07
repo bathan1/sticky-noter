@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 interface Note {
     id: string,
@@ -98,6 +98,20 @@ const DraggableDiv: React.FC<DraggableDivProps> = (props) => {
         </div>
     );
 
+    useEffect(() => {
+        const handleKeyUp = (event: KeyboardEvent) => {
+            if (event.key === "Escape") {
+                setContextMenuVisible(false);
+            }
+        };
+
+        document.addEventListener("keyup", handleKeyUp);
+
+        return () => {
+            document.removeEventListener("keyup", handleKeyUp);
+        };
+    }, []);
+
     return(
         <div>
             <div 
@@ -105,7 +119,7 @@ const DraggableDiv: React.FC<DraggableDivProps> = (props) => {
                 width: '100px',
                 height: '100px',
                 background: 'lightyellow',
-                border: '2px solid black',
+                border: '0.1px solid black',
                 position: 'absolute',
                 top: position.y + 'px',
                 left: position.x + 'px',
