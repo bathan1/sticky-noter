@@ -143,7 +143,6 @@ const DraggableDiv: React.FC<DraggableDivProps> = (props) => {
     useEffect(() => {
         const handleKeyUp = (event: KeyboardEvent) => {
             if (event.key === "Escape") {
-                setContextMenuVisible(false);
                 setIsEditing(false);
             }
         };
@@ -217,8 +216,6 @@ const DraggableDiv: React.FC<DraggableDivProps> = (props) => {
                 left: position.x + 'px',
                 cursor: isDragging ? 'grabbing' : 'grab',
                 userSelect: isEditing ? "text" : "none",
-                resize: "both",
-                overflow: "auto"
             }} 
                 onMouseDown={handleMouseDown} 
                 onMouseMove={handleMouseMove} 
@@ -236,7 +233,7 @@ const DraggableDiv: React.FC<DraggableDivProps> = (props) => {
                     height: '85%', 
                     boxSizing: 'border-box',
                     background: 'lightyellow',
-                    margin: "15% 7.5% 0 7.5%",
+                    margin: "15% 0 0 7.5%",
                     padding: 0,
                     border: 'none',
                     outline: 'none',
