@@ -24,8 +24,6 @@ const DraggableDiv: React.FC<DraggableDivProps> = (props) => {
     const [isEditing, setIsEditing] = useState(false);
     const [editableContent, setEditableContent] = useState(props.content);
     const [isHovered, setIsHovered] = useState(false);
-    const [isResizing, setIsResizing] = useState(false);
-    const [resizeHandle, setResizeHandle] = useState('');
 
     const handleMouseDown = (event: React.MouseEvent) => {
         if (!isEditing) {

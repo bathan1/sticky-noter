@@ -14,14 +14,27 @@ const NoteCreator: React.FC<NoteCreatorProps> = (props) => {
   }
   
   return(
-    <form onSubmit={handleSubmit}>
-      <input 
-        type="text" 
+    <form onSubmit={handleSubmit} style={{
+      height: "150px",
+      width: "150px",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      margin: "auto",
+      textAlign: "center"
+    }}>
+      <textarea 
         placeholder='Enter note to write e.g. "hi mom"' 
         value={inputValue}
-        onChange={(e) => setInputValue(e.target.value)} 
+        onChange={(e) => setInputValue(e.target.value)}
+        style={{
+          height: "100%",
+          width: "100%"
+        }} 
       />
-      <button>Add note</button>
+      <button style={{
+        height: "100%"
+      }}>Add note</button>
     </form>
   )
 }
