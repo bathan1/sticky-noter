@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import exitButtonImage from "../images/x-button.png";
+import editButtonImage from "../images/edit-button.png";
+import deleteButtonImage from "../images/delete-button.png";
 
 interface Note {
     id: string,
@@ -20,6 +23,7 @@ const DraggableDiv: React.FC<DraggableDivProps> = (props) => {
     const [contextMenuVisible, setContextMenuVisible] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
     const [editableContent, setEditableContent] = useState(props.content);
+    const [isHovered, setIsHovered] = useState(false);
 
     const handleMouseDown = (event: React.MouseEvent) => {
         setIsDragging(true);
@@ -68,30 +72,70 @@ const DraggableDiv: React.FC<DraggableDivProps> = (props) => {
         setEditableContent(props.content);
     }
 
-    const handleSaveClick = () => {
-        const updatedNotes = props.notes.map(note => 
-          note.id === props.id ? { ...note, content: editableContent } : note
-        );
-      
-        props.setNotes(updatedNotes);
+    const handleExitClick = () => {
         setIsEditing(false);
         setContextMenuVisible(false);
-      }
+    }
 
       const contextMenu = (
         <div
             className="context-menu"
             style={{
-                position: 'absolute',
-                top: position.y + 'px',
-                left: position.x + 'px',
+                top: 0,
+                left: 0,
                 display: contextMenuVisible ? 'block' : 'none'
             }}
         >
             {!isEditing && (
-                <div>
-                    <button id="editButton" onClick={handleEditClick}>E</button>
-                    <button id="deleteButton" onClick={handleDeleteClick}>X</button>
+                <div 
+                style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    display: "flex",
+                    flexDirection: "row",
+                }}
+                >
+                    <img 
+                    src={editButtonImage} 
+                    alt="Click me to edit your note" 
+                    onClick={handleEditClick} 
+                    style={{
+                        height: '15%',
+                        width: '15%'
+                    }}
+                    />
+                    <img 
+                    src={deleteButtonImage} 
+                    alt="Click me to delete your note forever (a long time...)" 
+                    id="deleteButton" 
+                    onClick={handleDeleteClick}
+                    style={{
+                        height: '15%',
+                        width: '15%'
+                    }} 
+                    />
+                </div>
+            )}
+            {isEditing && (
+                <div 
+                style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    display: "flex",
+                    flexDirection: "row",
+                }}
+                >
+                    <img 
+                    src={exitButtonImage} 
+                    alt="Click me to exit (or hit escape)" 
+                    onClick={handleExitClick} 
+                    style={{
+                        height: '25%',
+                        width: '25%'
+                    }}
+                    />
                 </div>
             )}
         </div>
@@ -132,13 +176,29 @@ const DraggableDiv: React.FC<DraggableDivProps> = (props) => {
         setEditableContent(newNote.content);
     }
 
+
+    function handleMouseOver() {
+        setIsHovered(true);
+        setContextMenuVisible(true);
+        setPosition({ x: position.x, y: position.y });
+
+    }
+
+    function handleMouseOut(): void {
+        setIsHovered(false);
+        setContextMenuVisible(false);
+    }
+
     return(
-        <div style={{ height: "100px" }}>
+        <>
             <div id="textContainer"
                 style={{
-                width: '100px',
-                height: '100px',
+                display: 'flex',
+                alignItems: "center",
+                justifyContent: "center",
                 background: 'lightyellow',
+                width: '150px',
+                height: '150px',
                 border: '0.1px solid black',
                 position: 'absolute',
                 top: position.y + 'px',
@@ -149,25 +209,28 @@ const DraggableDiv: React.FC<DraggableDivProps> = (props) => {
                 onMouseDown={handleMouseDown} 
                 onMouseMove={handleMouseMove} 
                 onMouseUp={handleMouseUp}
-                onContextMenu={handleContextMenu}
+                onMouseOver={handleMouseOver}
+                onMouseOut={handleMouseOut}
             >
-            <textarea 
-                value={editableContent}
-                readOnly={!isEditing}
-                style={{
-                    width: '100%',
-                    height: '100%', 
-                    boxSizing: 'border-box',
-                    margin: 0,
-                    padding: 0,
-                    border: 'none',
-                    outline: 'none'
-                }}
-                onChange={handleNoteChange}
-            />
+                <textarea 
+                    value={editableContent}
+                    readOnly={!isEditing}
+                    style={{
+                        width: '100%',
+                        height: '85%', 
+                        boxSizing: 'border-box',
+                        background: 'lightyellow',
+                        margin: "15% 7.5% 0 7.5%",
+                        padding: 0,
+                        border: 'none',
+                        outline: 'none',
+                        cursor: 'default'
+                    }}
+                    onChange={handleNoteChange}
+                />
+                {contextMenu}
             </div>
-            {contextMenu}
-        </div>
+        </>
     )
 }
 
