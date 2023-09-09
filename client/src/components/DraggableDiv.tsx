@@ -78,25 +78,25 @@ const DraggableDiv: React.FC<DraggableDivProps> = (props) => {
         setContextMenuVisible(false);
       }
 
-    const contextMenu = (
+      const contextMenu = (
         <div
             className="context-menu"
-            style={{ position: 'absolute', top: position.y + 'px', left: position.x + 'px', display: contextMenuVisible ? 'block' : 'none' }}
+            style={{
+                position: 'absolute',
+                top: position.y + 'px',
+                left: position.x + 'px',
+                display: contextMenuVisible ? 'block' : 'none'
+            }}
         >
-            {!isEditing && (<button id="editButton" onClick={handleEditClick}>E</button>)}
-            {!isEditing && (<button id="deleteButton" onClick={handleDeleteClick}>X</button>)}
-            {isEditing && (
-                <div> 
-                    <input
-                        type="text"
-                        value={editableContent}
-                        onChange={(event) => setEditableContent(event.target.value)}
-                    />
-                    <button onClick={handleSaveClick}>Save</button>
+            {!isEditing && (
+                <div>
+                    <button id="editButton" onClick={handleEditClick}>E</button>
+                    <button id="deleteButton" onClick={handleDeleteClick}>X</button>
                 </div>
             )}
         </div>
     );
+    
 
     useEffect(() => {
         const handleKeyUp = (event: KeyboardEvent) => {
@@ -113,9 +113,28 @@ const DraggableDiv: React.FC<DraggableDivProps> = (props) => {
         };
     }, []);
 
+    function replaceElement(arr: Note[], index: number, newValue: Note): Note[] {
+        return arr.slice(0, index).concat(newValue, arr.slice(index + 1));
+    }
+
+    function handleNoteChange(event: React.ChangeEvent<HTMLTextAreaElement>): void {
+
+        const newNote = { ...props.note };
+        newNote.content = event.target.value;
+
+        const index = props.notes.findIndex((note) => note.id === props.note.id);
+        if (index === -1) {
+            console.error("error finding the current note");
+        }
+        const newNotesArray = replaceElement(props.notes, index, newNote);
+
+        props.setNotes(newNotesArray);
+        setEditableContent(newNote.content);
+    }
+
     return(
-        <div>
-            <div 
+        <div style={{ height: "100px" }}>
+            <div id="textContainer"
                 style={{
                 width: '100px',
                 height: '100px',
@@ -132,7 +151,20 @@ const DraggableDiv: React.FC<DraggableDivProps> = (props) => {
                 onMouseUp={handleMouseUp}
                 onContextMenu={handleContextMenu}
             >
-            {props.content}
+            <textarea 
+                value={editableContent}
+                readOnly={!isEditing}
+                style={{
+                    width: '100%',
+                    height: '100%', 
+                    boxSizing: 'border-box',
+                    margin: 0,
+                    padding: 0,
+                    border: 'none',
+                    outline: 'none'
+                }}
+                onChange={handleNoteChange}
+            />
             </div>
             {contextMenu}
         </div>
