@@ -24,17 +24,21 @@ const DraggableDiv: React.FC<DraggableDivProps> = (props) => {
     const [isEditing, setIsEditing] = useState(false);
     const [editableContent, setEditableContent] = useState(props.content);
     const [isHovered, setIsHovered] = useState(false);
+    const [isResizing, setIsResizing] = useState(false);
+    const [resizeHandle, setResizeHandle] = useState('');
 
     const handleMouseDown = (event: React.MouseEvent) => {
-        setIsDragging(true);
-        setInitialPosition({
+        if (!isEditing) {
+            setIsDragging(true);
+            setInitialPosition({
             x: event.clientX - position.x,
             y: event.clientY - position.y
         });
+        }
     };
 
     const handleMouseMove = (event: React.MouseEvent) => {
-        if (isDragging) {
+        if (isDragging && !isEditing) {
             setPosition({
                 x: event.clientX - initialPosition.x,
                 y: event.clientY - initialPosition.y
@@ -44,12 +48,6 @@ const DraggableDiv: React.FC<DraggableDivProps> = (props) => {
 
     const handleMouseUp = () => {
         setIsDragging(false);
-    };
-
-    const handleContextMenu = (event: React.MouseEvent) => {
-        event.preventDefault();
-        setContextMenuVisible(true);
-        setPosition({ x: position.x, y: position.y });
     };
 
     const handleDeleteClick = () => {
@@ -189,6 +187,20 @@ const DraggableDiv: React.FC<DraggableDivProps> = (props) => {
         setContextMenuVisible(false);
     }
 
+    const unhighlightSelection = () => {
+        const selection = window.getSelection();
+        if (selection) {
+            selection.removeAllRanges();
+        }
+    };
+
+    function handleDoubleClick(): void {
+        unhighlightSelection();
+
+        setIsEditing(true);
+        setEditableContent(props.content);
+    }
+
     return(
         <>
             <div id="textContainer"
@@ -204,29 +216,33 @@ const DraggableDiv: React.FC<DraggableDivProps> = (props) => {
                 top: position.y + 'px',
                 left: position.x + 'px',
                 cursor: isDragging ? 'grabbing' : 'grab',
-                userSelect: isDragging ? "none" : "auto"
+                userSelect: isEditing ? "text" : "none",
+                resize: "both",
+                overflow: "auto"
             }} 
                 onMouseDown={handleMouseDown} 
                 onMouseMove={handleMouseMove} 
                 onMouseUp={handleMouseUp}
                 onMouseOver={handleMouseOver}
                 onMouseOut={handleMouseOut}
+                onDoubleClick={handleDoubleClick}
             >
-                <textarea 
-                    value={editableContent}
-                    readOnly={!isEditing}
-                    style={{
-                        width: '100%',
-                        height: '85%', 
-                        boxSizing: 'border-box',
-                        background: 'lightyellow',
-                        margin: "15% 7.5% 0 7.5%",
-                        padding: 0,
-                        border: 'none',
-                        outline: 'none',
-                        cursor: 'default'
-                    }}
-                    onChange={handleNoteChange}
+                <textarea
+                id="noteContent" 
+                value={editableContent}
+                readOnly={!isEditing}
+                style={{
+                    width: '100%',
+                    height: '85%', 
+                    boxSizing: 'border-box',
+                    background: 'lightyellow',
+                    margin: "15% 7.5% 0 7.5%",
+                    padding: 0,
+                    border: 'none',
+                    outline: 'none',
+                    cursor: 'default',
+                }}
+                onChange={handleNoteChange}
                 />
                 {contextMenu}
             </div>
